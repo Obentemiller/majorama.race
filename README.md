@@ -1,6 +1,9 @@
 # Majorama.race
 
 > Playground de agentes de corrida da família **Majorama**.
+>
+> **The project is uploaded on GitHub Pages, so just click the link and enjoy! : https://obentemiller.github.io/majorama.race/**
+
 
 Simulador de corrida **vista de cima (2D)** para estudar e desenvolver agentes de corrida capazes de ser rápidos e **ultrapassar**. O carro é fixo e pré-definido, a física é dinâmica (Newton), e o agente interage por uma interface mínima:
 
