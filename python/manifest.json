@@ -1,0 +1,17 @@
+{
+ "arquivos": [
+  "agente_runner.py",
+  "agentes/modelo.py",
+  "agentes/reativo.py",
+  "agentes/treinado_numpy.py",
+  "backend.py",
+  "carro.py",
+  "constantes.py",
+  "exemplos/busca_aleatoria.py",
+  "exemplos/script_env.py",
+  "modelos/solo.npz",
+  "observacao.py",
+  "pista_env.py",
+  "recompensa.py"
+ ]
+}

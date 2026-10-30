@@ -1,0 +1,4 @@
+# Dependências só para treinar com RL (rodar agentes Python comuns não precisa de nada disso)
+numpy
+gymnasium
+stable-baselines3   # instala o PyTorch junto

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Majorama.race — Playground de agentes de corrida</title>
+<meta name="description" content="Playground para desenvolver agentes de corrida em Python (ou JavaScript), com física de verdade, sensores por raios e ultrapassagens. Roda inteiramente no seu navegador." />
+<link rel="stylesheet" href="vendor/majorama-ui/majorama-ui.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+
+  <header id="topbar">
+    <div id="brand">
+      <span class="brand-glyph">▓▒░</span>
+      <h1>MAJORAMA<span class="dim">.race // Agent Playground</span></h1>
+    </div>
+
+    <div id="controls">
+      <label for="exampleSelect" class="sr-only">Exemplo</label>
+      <select id="exampleSelect" data-mobile-slot="editor-opts">
+        <optgroup label="Agentes (corrida em tempo real)">
+          <option value="modelo">Modelo mínimo</option>
+          <option value="reativo">Reativo (porte do JS)</option>
+          <option value="treinado">Treinado (PPO em NumPy)</option>
+        </optgroup>
+        <optgroup label="Scripts (você conduz o tempo)">
+          <option value="script_env">Ambiente estilo Gym</option>
+          <option value="busca">Busca aleatória (aprende)</option>
+        </optgroup>
+      </select>
+
+      <button id="runBtn" title="Executar (Ctrl+Enter)"><span class="ic">▶</span><span class="txt">Executar</span></button>
+      <button id="stopBtn" title="Parar execução" disabled><span class="ic">■</span><span class="txt">Parar</span></button>
+      <button id="bY" aria-pressed="true" title="Abrir/fechar a janela de scripts"><span class="ic">▤</span><span class="txt">Scripts</span></button>
+      <button id="helpBtn" title="Tutorial guiado"><span class="ic">?</span><span class="txt">Ajuda</span></button>
+
+      <span id="perf">
+        <span id="fps">FPS: --</span>
+        <span id="tempo">Tempo: --</span>
+      </span>
+    </div>
+  </header>
+
+  <main id="workspace">
+
+    <!-- ============ SIMULAÇÃO ============ -->
+    <section id="terminal-pane" aria-label="Simulação">
+      <div id="sim-bar">
+        <button id="bP">⏸ Pausa</button>
+        <button id="bR">↺ Reiniciar</button>
+        <button id="bL" aria-pressed="true">Raios: on</button>
+        <button id="bC">Câmera: pista</button>
+        <button id="bF">Foco: C1</button>
+        <button id="bV" title="Velocidade da simulação">×1</button>
+        <button id="bH" aria-pressed="false" title="Dirigir o C1 com o teclado ou toque">Humano: off</button>
+        <button id="bU" aria-pressed="true" title="Mostrar/ocultar o painel de posições">HUD</button>
+      </div>
+      <div id="terminal-container">
+        <canvas id="cv"></canvas>
+        <div id="hud"></div>
+        <div id="tc" hidden>
+          <div><button data-k="e">◀</button><button data-k="d">▶</button></div>
+          <div><button data-k="f">▼</button><button data-k="a">▲</button></div>
+        </div>
+      </div>
+      <div id="status-bar">
+        <span id="status-msg">Pronto.</span>
+        <span id="engine-mode">Motor: JS (página)</span>
+      </div>
+    </section>
+
+    <!-- ============ DIVISOR (arraste para redimensionar) ============ -->
+    <div id="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionar a janela de scripts" tabindex="0"></div>
+
+    <!-- ============ JANELA DE SCRIPTS ============ -->
+    <aside id="editor-pane" aria-label="Janela de scripts">
+      <div id="editor-header">
+        <span>agente.py</span>
+        <span class="acoes">
+          <button id="maxEditor" title="Maximizar/restaurar a gaveta" aria-label="Maximizar a janela de scripts" aria-pressed="false">⤢</button>
+          <button id="resetBtn" title="Restaurar exemplo original">↺ reset</button>
+          <button id="closeEditor" title="Fechar a janela de scripts" aria-label="Fechar a janela de scripts">✕</button>
+        </span>
+      </div>
+      <div id="editor-opts">
+        <select id="pyModo" aria-label="Modo">
+          <option value="agente">modo: agente</option>
+          <option value="script">modo: script</option>
+        </select>
+        <select id="pyCar" aria-label="Carro controlado pelo Python"></select>
+        <button id="pyLoad" title="Abrir um arquivo .py do aparelho">⤒ abrir</button>
+        <button id="pySave" title="Baixar o código como .py">⤓ baixar</button>
+        <input id="pyFile" type="file" accept=".py" hidden />
+      </div>
+
+      <textarea id="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
+
+      <div id="console-header">console</div>
+      <div id="console-output" role="log" aria-live="polite"></div>
+    </aside>
+
+  </main>
+
+  <footer id="footer">
+    <span>Majorama.race — playground didático de agentes de corrida. Toda a execução ocorre localmente no seu navegador.</span>
+    <span>
+      <a href="https://github.com/Obentemiller/majorama.race/blob/main/manual.md" target="_blank" rel="noopener noreferrer">Manual</a>
+      <a href="https://github.com/Obentemiller/majorama.race" id="repoLink" target="_blank" rel="noopener noreferrer">Github/Obentemiller</a>
+    </span>
+  </footer>
+
+  <!-- Tutorial guiado (passos em src/ui/ajuda.js; lógica em vendor/majorama-ui) -->
+  <div id="tour" hidden>
+    <div id="tour-hl"></div>
+    <div id="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitulo">
+      <button id="tourSair" aria-label="Sair do tutorial" title="Sair (Esc)">✕</button>
+      <h2 id="tourTitulo"></h2>
+      <p id="tourTexto"></p>
+      <a id="tourLink" class="btn" target="_blank" rel="noopener noreferrer" hidden></a>
+      <div class="nav">
+        <span class="pos" id="tourPos"></span>
+        <button id="tourPrev">← Anterior</button>
+        <button id="tourNext">Próximo →</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="src/constantes.js"></script>
+  <script src="src/pista.js"></script>
+  <script src="src/carro.js"></script>
+  <script src="src/agentes/reativo.js"></script>
+  <script src="src/agentes/registro.js"></script>
+  <script src="src/simulacao.js"></script>
+  <script src="src/agentes/humano.js"></script>
+  <script src="src/ui/render.js"></script>
+  <script src="src/web/ponte.js"></script>
+  <script src="src/ui/python_ui.js"></script>
+  <script src="vendor/majorama-ui/majorama-ui.js"></script>
+  <script src="src/ui/ajuda.js"></script>
+</body>
+</html>

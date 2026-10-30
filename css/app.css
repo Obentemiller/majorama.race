@@ -1,0 +1,56 @@
+/* Majorama.race — regras específicas do projeto (o visual geral vem de vendor/majorama-ui/majorama-ui.css) */
+#sim-bar{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 10px;
+  background:var(--bg-1);
+  border-bottom:1px solid var(--line);
+  overflow-x:auto;
+  white-space:nowrap;
+  scrollbar-width:none;
+}
+#sim-bar::-webkit-scrollbar{display:none;}
+#sim-bar button{padding:3px 8px;font-size:11.5px;flex:0 0 auto;}
+/* o canvas ocupa o contêiner menos a moldura; src/ui/render.js recalcula a resolução quando o tamanho muda */
+#cv{
+  position:absolute;
+  left:14px;top:14px;
+  width:calc(100% - 28px);
+  height:calc(100% - 28px);
+  background:#000;
+  box-shadow:0 0 0 1px var(--line), 0 0 40px rgba(75,227,161,.05);
+  display:block;
+  touch-action:none;
+}
+#hud{
+  position:absolute;
+  left:22px;top:22px;
+  z-index:2;
+  pointer-events:none;
+  font-size:11px;
+  line-height:1.5;
+  white-space:pre;
+  background:rgba(11,13,16,.78);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:6px 8px;
+}
+#hud .dim{color:var(--fg-dim);}
+#tc{
+  position:absolute;
+  left:0;right:0;bottom:22px;
+  z-index:3;
+  display:flex;
+  justify-content:space-between;
+  padding:0 22px;
+  pointer-events:none;
+}
+#tc div{display:flex;gap:10px;pointer-events:auto;}
+#tc button{width:60px;height:60px;font-size:20px;opacity:.85;touch-action:none;}
+
+@media (max-width: 640px), (orientation: portrait) and (max-width: 860px){
+  #sim-bar button{min-height:34px;font-size:12px;}
+  #tc button{width:68px;height:68px;}
+}
