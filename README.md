@@ -37,12 +37,6 @@ Sem build e sem backend: roda **estático no GitHub Pages** e na máquina de que
 | `tests/` | `rodar_testes.py` (Python: protocolo, Python == JS, modelo exportado) e `ui_smoke.mjs` (interface em jsdom: layout, tutorial, ponte com o Worker); ambos rodam no CI (`.github/workflows/ci.yml`) | — |
 | `AGENTS.md` | regras para agentes de LLM que editam o projeto | — |
 
-## Publicar no GitHub Pages
-
-1. Suba o repositório; em *Settings → Pages* escolha a branch e a pasta raiz (`/`). O `index.html` já está na raiz e o `.nojekyll` evita processamento.
-2. Depois de criar/remover arquivos em `python/`, rode `python tools/gerar_manifesto.py` e faça commit do `python/manifest.json`.
-3. O Pyodide é carregado do CDN (versão fixa em `src/web/worker.js`). Não usa `SharedArrayBuffer`, então não precisa de cabeçalhos especiais.
-
 ## Os dois caminhos do Python (mesmo script)
 
 | | Navegador (Pages) | Local (Node + Python) |
